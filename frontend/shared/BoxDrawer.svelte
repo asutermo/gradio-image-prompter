@@ -126,12 +126,6 @@
       box.push(x1, y1, x2, y2);
       let scale_x = natural_width / width;
       let scale_y = natural_height / height;
-      let is_point = x1 == x2 && y1 == y2;
-      console.log(natural_width, width);
-      console.log(natural_height, height);
-      console.log(x1, x2, y1, y2);
-      console.log(scale_x, scale_y);
-      console.log(is_point);
       points.push(
         Math.round(x1 * scale_x),
         Math.round(y1 * scale_y),
