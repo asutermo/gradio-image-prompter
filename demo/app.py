@@ -1,15 +1,21 @@
 import gradio as gr
 from gradio_image_prompter import ImagePrompter
 
+bounding_boxes = []
+
 def process_prompts(prompts):
     # Assuming prompts is a dictionary with "image" and "bbox" keys
     # For demonstration, this function simply returns what it receives.
     # You might need to adjust the logic based on what "prompts" actually contains
     # and what you want to do with it.
     _ = prompts["image"]  # This would be the image file
-    bbox = prompts["bbox"]   # This should be the bounding box information
-    return bbox, "Export functionality to be implemented"  # Placeholder for export functionality
+    #bbox = prompts["bbox"]   # This should be the bounding box information
+    bounding_boxes.append(prompts["bbox"])
+    return bounding_boxes[-1]  # Placeholder for export functionality
 
+def export_to_csv():
+    with open('test.csv', 'w') as csv:
+        csv.write('woo')
 
 def extract_image_and_bbox(prompts):
     """
@@ -21,7 +27,6 @@ def extract_image_and_bbox(prompts):
     Returns:
     - tuple: A tuple containing the values associated with 'image' and 'bbox' keys in the input dictionary.
     """
-    print(prompts)
     return prompts["image"], prompts["bbox"]
 
 with gr.Blocks() as demo:
@@ -30,23 +35,27 @@ with gr.Blocks() as demo:
         image_prompter = ImagePrompter(show_label=False)
 
     # Define the button to process the inputs
-    process_button = gr.Button("Process")
+    append_button = gr.Button("Append Bounding Box")
 
     # Create the outputs
-    output_bbox = gr.Dataframe(label="Bounding Box", headers=["x0", "y0", "x1", "y1"])
+    output_bboxes_df = gr.Dataframe(label="Bounding Box", headers=["x0", "y0", "x1", "y1"])
+    clear_button = gr.ClearButton()
     export_button = gr.Button("Export CSV")  # Placeholder, functionality needs to be implemented
 
     # Set up the interaction
-    process_button.click(
+    append_button.click(
         fn=process_prompts,
         inputs=image_prompter,
-        outputs=[output_bbox, export_button]
+        outputs=[output_bboxes_df]
     )
 
-    # Here, you would add additional logic for what happens when `export_button` is clicked.
-    # This often involves saving the processed data to a CSV file and then providing
-    # that file for download. This part of the implementation is not covered in this snippet
-    # because it depends on specifics about how you're handling data and what you're exporting.
+    export_button.click(
+        fn=export_to_csv,
+        inputs=[],
+        outputs=[]
+    )
+
+    clear_button.click(lambda: [], outputs=output_bboxes_df)
 
 
 if __name__ == "__main__":
