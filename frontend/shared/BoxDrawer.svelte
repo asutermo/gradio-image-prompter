@@ -10,8 +10,8 @@
   export let natural_width = 0;
   export let natural_height = 0;
 
-  let boxes: Array<Array<number>> = [];
-  let points: Array<Array<number>> = [];
+  let box: Array<number> = [];
+  let points: Array<number> = [];
 
   let canvas_container: HTMLElement;
   let canvas: HTMLCanvasElement;
@@ -50,7 +50,7 @@
   }
 
   export function clear() {
-    boxes = [];
+    box = [];
     points = [];
     draw_canvas();
     dispatch("change", points);
@@ -58,7 +58,7 @@
   }
 
   export function undo() {
-    boxes.pop();
+    box.pop();
     points.pop();
     draw_canvas();
     dispatch("change", points);
@@ -120,18 +120,18 @@
       let y1 = Math.min(prev_y, y);
       let x2 = Math.max(prev_x, x);
       let y2 = Math.max(prev_y, y);
-      boxes.push([x1, y1, x2, y2]);
+      box.push(x1, y1, x2, y2);
       let scale_x = natural_width / width;
       let scale_y = natural_height / height;
       let is_point = x1 == x2 && y1 == y2;
-      points.push([
+      points.push(
         Math.round(x1 * scale_x),
         Math.round(y1 * scale_y),
         is_point ? (mouse_button == 0 ? 1 : 0) : 2, // label1
         is_point ? 0 : Math.round(x2 * scale_x),
         is_point ? 0 : Math.round(y2 * scale_y),
         is_point ? 4 : 3, // label2
-      ]);
+      );
       dispatch("change", points);
     }
     mouse_pressing = false;
@@ -148,57 +148,26 @@
     if (!ctx) return;
     ctx.clearRect(0, 0, width, height);
     if (mouse_pressing && cur_x != prev_x && prev_y != cur_y) {
-      let boxes_temp = boxes.slice();
-      boxes_temp.push([prev_x, prev_y, cur_x, cur_y]);
-      draw_boxes(boxes_temp);
-      draw_points(boxes);
+      let box_temp = box.slice();
+      box_temp.push(prev_x, prev_y, cur_x, cur_y);
+      draw_box(box_temp);
     } else {
-      draw_boxes(boxes);
-      draw_points(boxes);
+        draw_box(box);
     }
   }
 
-  function draw_boxes(boxes: Array<Array<number>>) {
+  function draw_box(box: Array<number>) {
     if (!ctx) return;
     ctx.strokeStyle = "rgb(0, 0, 0)"; 
     ctx.fillStyle = "rgba(255, 0, 0, 0.1)";
     ctx.beginPath();
-    boxes.forEach((box: Array<number>) => {
-      if (box[0] != box[2] && box[1] != box[3]) {
+    if (box[0] != box[2] && box[1] != box[3]) {
         ctx.rect(box[0], box[1], box[2] - box[0], box[3] - box[1]);
       }
-    });
     ctx.fill();
     ctx.stroke();
   }
 
-  function draw_points(boxes: Array<Array<number>>) {
-    if (!ctx) return;
-    // Draw foreground points.
-    ctx.beginPath();
-    ctx.fillStyle = "rgba(0, 255, 255, 1.0)"; // Cyan.
-    boxes.forEach((box: Array<number>, index: number) => {
-      if (points[index][2] == 1) {
-        let radius = Math.sqrt(width * height) * 0.01;
-        ctx.moveTo(box[0] + radius, box[1]);
-        ctx.arc(box[0], box[1], radius, 0, 2 * Math.PI, false);
-      }
-    });
-    ctx.fill();
-    ctx.stroke();
-    // Draw background points.
-    ctx.beginPath();
-    ctx.fillStyle = "rgba(255, 192, 203, 1.0)"; // Pink.
-    boxes.forEach((box: Array<number>, index: number) => {
-      if (points[index][2] == 0) {
-        let radius = Math.sqrt(width * height) * 0.01;
-        ctx.moveTo(box[0] + radius, box[1]);
-        ctx.arc(box[0], box[1], radius, 0, 2 * Math.PI, false);
-      }
-    });
-    ctx.fill();
-    ctx.stroke();
-  }
 </script>
 
 <div class="wrap" bind:this={canvas_container}>

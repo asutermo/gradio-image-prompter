@@ -30,12 +30,12 @@ set_documentation_group("component")
 
 class PromptData(GradioModel):
     image: FileData
-    points: List[List[float]]
+    points: List[float]
 
 
 class PromptValue(TypedDict):
     image: Optional[Union[np.ndarray, _Image.Image, str]]
-    points: Optional[List[List[float]]]
+    points: Optional[List[float]]
 
 
 @document()
@@ -119,13 +119,13 @@ class ImagePrompter(gradio.Image):
         if x is None:
             return x
         im = super().preprocess(x.image)
-        return {"image": im, "points": x.points}
+        return {"image": im, "points": [x.points]}
 
     def postprocess(self, y: PromptValue) -> PromptData | None:
         if y is None:
             return None
         image, points = y.get("image", None), y.get("points", [])
-        return PromptData(image=super().postprocess(image), points=points)
+        return PromptData(image=super().postprocess(image), points=[points])
 
     def as_example(self, y: PromptValue) -> str | None:
         if y is None:

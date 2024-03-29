@@ -17,15 +17,6 @@
   />
 
   <IconButton
-    Icon={Erase}
-    label="Remove All boxes"
-    on:click={(event) => {
-      dispatch("remove_boxes");
-      event.stopPropagation();
-    }}
-  />
-
-  <IconButton
     Icon={Clear}
     label="Remove Image"
     on:click={(event) => {

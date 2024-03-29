@@ -117,9 +117,6 @@
       on:remove_box={() => {
         box_drawer.undo();
       }}
-      on:remove_boxes={() => {
-        box_drawer.clear();
-      }}
       on:remove_image={() => {
         value = null;
         dispatch("clear");
