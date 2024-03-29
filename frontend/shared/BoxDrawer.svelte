@@ -99,6 +99,8 @@
   }
 
   function handle_draw_start(e: MouseEvent | TouchEvent) {
+    points = [];
+    box = [];
     e.preventDefault();
     (mouse_pressing = true), (mouse_button = 0);
     if (e instanceof MouseEvent) mouse_button = e.button;
@@ -120,17 +122,21 @@
       let y1 = Math.min(prev_y, y);
       let x2 = Math.max(prev_x, x);
       let y2 = Math.max(prev_y, y);
+      
       box.push(x1, y1, x2, y2);
       let scale_x = natural_width / width;
       let scale_y = natural_height / height;
       let is_point = x1 == x2 && y1 == y2;
+      console.log(natural_width, width);
+      console.log(natural_height, height);
+      console.log(x1, x2, y1, y2);
+      console.log(scale_x, scale_y);
+      console.log(is_point);
       points.push(
         Math.round(x1 * scale_x),
         Math.round(y1 * scale_y),
-        is_point ? (mouse_button == 0 ? 1 : 0) : 2, // label1
-        is_point ? 0 : Math.round(x2 * scale_x),
-        is_point ? 0 : Math.round(y2 * scale_y),
-        is_point ? 4 : 3, // label2
+        Math.round(x2 * scale_x),
+        Math.round(y2 * scale_y),
       );
       dispatch("change", points);
     }
