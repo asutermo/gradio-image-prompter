@@ -16,7 +16,7 @@
   let box_drawer: BoxDrawer;
 
   export let value: null | FileData;
-  export let points: null | number[][6];
+  export let bbox: null | number[];
   export let label: string | undefined = undefined;
   export let show_label: boolean;
 
@@ -29,9 +29,9 @@
     box_drawer.resize_canvas();
   }
 
-  function handle_points_change({ detail }: { detail: number[][6] }) {
-    points = detail;
-    dispatch("points_change", detail);
+  function handle_bbox_change({ detail }: { detail: number[] }) {
+    bbox = detail;
+    dispatch("bbox_change", detail);
   }
 
   export let sources: ("clipboard" | "upload")[] = ["upload", "clipboard"];
@@ -148,7 +148,7 @@
         on:click={handle_click}
         on:load={handle_image_load}
       />
-      <BoxDrawer bind:this={box_drawer} on:change={handle_points_change} />
+      <BoxDrawer bind:this={box_drawer} on:change={handle_bbox_change} />
     {/if}
   </div>
   {#if sources.length > 1 || sources.includes("clipboard")}

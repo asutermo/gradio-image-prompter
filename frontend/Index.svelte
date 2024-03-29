@@ -24,9 +24,9 @@
   export let elem_classes: string[] = [];
   export let visible = true;
 
-  export let value: { image: FileData; points: number[][6] } | null = null;
+  export let value: { image: FileData; bbox: number[] } | null = null;
   $: _image = value && normalise_file(value.image, root, proxy_url);
-  $: _points = value && value.points;
+  $: _bbox = value && value.bbox;
 
   export let label: string;
   export let show_label: boolean;
@@ -123,10 +123,10 @@
     <ImageUploader
       bind:active_tool
       bind:value={_image}
-      bind:points={_points}
+      bind:bbox={_bbox}
       {root}
       {sources}
-      on:points_change={({ detail }) => (value.points = detail)}
+      on:bbox_change={({ detail }) => (value.bbox = detail)}
       on:edit={() => gradio.dispatch("edit")}
       on:clear={() => {
         value = null;
@@ -137,7 +137,7 @@
       on:drag={({ detail }) => (dragging = detail)}
       on:upload={({ detail }) => {
         if (value == null) {
-          value = { image: detail, points: null };
+          value = { image: detail, bbox: null };
         } else {
           value.image = detail;
         }

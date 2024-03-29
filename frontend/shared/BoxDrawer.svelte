@@ -11,7 +11,7 @@
   export let natural_height = 0;
 
   let box: Array<number> = [];
-  let points: Array<number> = [];
+  let bounding_box: Array<number> = [];
 
   let canvas_container: HTMLElement;
   let canvas: HTMLCanvasElement;
@@ -51,17 +51,17 @@
 
   export function clear() {
     box = [];
-    points = [];
+    bounding_box = [];
     draw_canvas();
-    dispatch("change", points);
+    dispatch("change", bounding_box);
     return true;
   }
 
   export function undo() {
     box.pop();
-    points.pop();
+    bounding_box.pop();
     draw_canvas();
-    dispatch("change", points);
+    dispatch("change", bounding_box);
     return true;
   }
 
@@ -99,7 +99,7 @@
   }
 
   function handle_draw_start(e: MouseEvent | TouchEvent) {
-    points = [];
+    bounding_box = [];
     box = [];
     e.preventDefault();
     (mouse_pressing = true), (mouse_button = 0);
@@ -126,13 +126,13 @@
       box.push(x1, y1, x2, y2);
       let scale_x = natural_width / width;
       let scale_y = natural_height / height;
-      points.push(
+      bounding_box.push(
         Math.round(x1 * scale_x),
         Math.round(y1 * scale_y),
         Math.round(x2 * scale_x),
         Math.round(y2 * scale_y),
       );
-      dispatch("change", points);
+      dispatch("change", bounding_box);
     }
     mouse_pressing = false;
   }
