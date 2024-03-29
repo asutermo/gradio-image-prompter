@@ -29,6 +29,7 @@ def extract_image_and_bbox(prompts):
     """
     return prompts["image"], prompts["bbox"]
 
+
 with gr.Blocks() as demo:
     # Create the inputs
     with gr.Row():
@@ -55,7 +56,7 @@ with gr.Blocks() as demo:
         outputs=[]
     )
 
-    clear_button.click(lambda: [], outputs=output_bboxes_df)
+    clear_button.click(lambda: [None, []], outputs=[image_prompter, output_bboxes_df])
 
 
 if __name__ == "__main__":
