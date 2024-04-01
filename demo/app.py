@@ -31,7 +31,7 @@ with gr.Blocks() as demo:
     append_button = gr.Button("Append Bounding Box")
 
     # Create the outputs
-    output_bboxes_df = gr.Dataframe(label="Bounding Box", headers=["img_path", "x0", "y0", "x1", "y1"], datatype=["str", "number", "number", "number", "number"])
+    output_bboxes_df = gr.Dataframe(label="Bounding Box", headers=["file_name", "x0", "y0", "x1", "y1"], datatype=["str", "number", "number", "number", "number"])
     clear_button = gr.ClearButton()
     export_button = gr.Button("Export CSV")  # Placeholder, functionality needs to be implemented
 

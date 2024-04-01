@@ -120,7 +120,8 @@ class ImagePrompter(gradio.Image):
         if x is None:
             return x
         im = super().preprocess(x.image)
-        return {"image": im, "bbox": [x.bbox], "path": x.image.path}
+        print(x.image)
+        return {"image": im, "bbox": [x.bbox], "path": x.image.orig_name}
 
     def postprocess(self, y: PromptValue) -> PromptData | None:
         if y is None:
