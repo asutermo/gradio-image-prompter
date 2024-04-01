@@ -36,6 +36,7 @@ class PromptData(GradioModel):
 class PromptValue(TypedDict):
     image: Optional[Union[np.ndarray, _Image.Image, str]]
     bbox: Optional[List[float]]
+    path: Optional[str]
 
 
 @document()
@@ -119,12 +120,13 @@ class ImagePrompter(gradio.Image):
         if x is None:
             return x
         im = super().preprocess(x.image)
-        return {"image": im, "bbox": [x.bbox]}
+        return {"image": im, "bbox": [x.bbox], "path": x.image.path}
 
     def postprocess(self, y: PromptValue) -> PromptData | None:
         if y is None:
             return None
         image, corners = y.get("image", None), y.get("bbox", [])
+        print(f'post {image.path}')
         return PromptData(image=super().postprocess(image), bbox=[corners])
 
     def as_example(self, y: PromptValue) -> str | None:

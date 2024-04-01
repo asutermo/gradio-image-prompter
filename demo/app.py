@@ -1,7 +1,8 @@
 import gradio as gr
 from gradio_image_prompter import ImagePrompter
+import pandas as pd 
 
-bounding_boxes = []
+csv_data = []
 
 def process_prompts(prompts):
     # Assuming prompts is a dictionary with "image" and "bbox" keys
@@ -9,26 +10,17 @@ def process_prompts(prompts):
     # You might need to adjust the logic based on what "prompts" actually contains
     # and what you want to do with it.
     _ = prompts["image"]  # This would be the image file
-    #bbox = prompts["bbox"]   # This should be the bounding box information
-    bounding_boxes.append(prompts["bbox"])
-    return bounding_boxes[-1]  # Placeholder for export functionality
+    bbox = prompts["bbox"][0]
+    path = prompts["path"]
+    df_row = [path, bbox[0], bbox[1], bbox[2], bbox[3]]
+    csv_data.append(df_row)
+    return [csv_data[-1]]
 
-def export_to_csv():
-    with open('test.csv', 'w') as csv:
-        csv.write('woo')
-
-def extract_image_and_bbox(prompts):
-    """
-    Extracts the 'image' and 'bbox' values from a dictionary.
-
-    Parameters:
-    - prompts (dict): A dictionary containing various keys, including 'image' and 'bbox'.
-
-    Returns:
-    - tuple: A tuple containing the values associated with 'image' and 'bbox' keys in the input dictionary.
-    """
-    return prompts["image"], prompts["bbox"]
-
+def export_to_csv(dataframe):
+    # TODO: is this overkill?
+    pass
+    #df = pd.DataFrame(dataframe.values)
+    #df.to_csv("test.csv", header=["img_path", "x0", "y0", "x1", "y1"])
 
 with gr.Blocks() as demo:
     # Create the inputs
@@ -39,7 +31,7 @@ with gr.Blocks() as demo:
     append_button = gr.Button("Append Bounding Box")
 
     # Create the outputs
-    output_bboxes_df = gr.Dataframe(label="Bounding Box", headers=["x0", "y0", "x1", "y1"])
+    output_bboxes_df = gr.Dataframe(label="Bounding Box", headers=["img_path", "x0", "y0", "x1", "y1"], datatype=["str", "number", "number", "number", "number"])
     clear_button = gr.ClearButton()
     export_button = gr.Button("Export CSV")  # Placeholder, functionality needs to be implemented
 
@@ -52,7 +44,7 @@ with gr.Blocks() as demo:
 
     export_button.click(
         fn=export_to_csv,
-        inputs=[],
+        inputs=[output_bboxes_df],
         outputs=[]
     )
 
