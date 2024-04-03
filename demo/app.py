@@ -18,9 +18,8 @@ def process_prompts(prompts):
 
 def export_to_csv(dataframe):
     # TODO: is this overkill?
-    pass
-    #df = pd.DataFrame(dataframe.values)
-    #df.to_csv("test.csv", header=["img_path", "x0", "y0", "x1", "y1"])
+    df = pd.DataFrame(dataframe.values)
+    df.to_csv("test.csv", header=["img_path", "x0", "y0", "x1", "y1"])
 
 with gr.Blocks() as demo:
     # Create the inputs

@@ -1,7 +1,6 @@
 # Image Prompter for Gradio
-A gradio component to upload images and process point/box prompts.
 
-This custom component is developed for [Tokenize Anything](https://github.com/baaivision/tokenize-anything) gradio demo.
+A gradio component to draw a bounding box and get the coordinates to export to CSV.
 
 ## Installation
 
@@ -45,4 +44,4 @@ demo.launch()
 
 ## Acknowledgement
 
-We thank the repositories: [SAM](https://github.com/facebookresearch/segment-anything), [GradioBox](https://github.com/ShoufaChen/gradio-box) and [Gradio](https://github.com/gradio-app/gradio).
+We thank the repositories: [gradio-image-prompter](https://github.com/PhyscalX/gradio-image-prompter) and [Gradio](https://github.com/gradio-app/gradio).
